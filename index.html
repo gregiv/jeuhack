@@ -94,18 +94,8 @@
         }, 10000); // Temps de chargement simulé en millisecondes (2 secondes ici)
       }, 3000); // Temps d'affichage du message de succès en millisecondes (1 seconde ici)
     }
+	
 
-    // Lorsque l'utilisateur n'a plus de tentatives, appeler cette fonction pour bloquer l'utilisateur
-    function bloquerUtilisateur() {
-      // Sauvegarder l'information de blocage dans le localStorage
-      localStorage.setItem("blocage", "true");
-    }
-
-    // Vérifier si l'utilisateur est bloqué
-    function estBloque() {
-      // Vérifier si l'information de blocage existe dans le localStorage
-      return localStorage.getItem("blocage") === "true";
-    }
 
     // Fonction pour vérifier la proposition de l'utilisateur
      function proposer(mot) {
@@ -145,6 +135,23 @@
         for (var bouton of boutons) {
           bouton.disabled = true;
         }
+		sessionStorage.setItem("blocage", "true");
+      }
+    }
+	
+	    window.onload = function() {
+      // Vérifier si l'information de blocage existe dans sessionStorage
+      if (sessionStorage.getItem("blocage") === "true") {
+        // Désactiver tous les boutons
+        var boutons = document.getElementsByClassName("word");
+        for (var bouton of boutons) {
+          bouton.disabled = true;
+        }
+        // Afficher le message de blocage
+        afficher("Vous êtes bloqué. Veuillez contacter l'administrateur.");
+      } else {
+        // Afficher les boutons des mots et autres informations normalement
+        // ...
       }
     }
 
@@ -165,23 +172,23 @@
       motsElement.appendChild(bouton);
     }
 	
-	var unlockButton = document.getElementById("unlockButton");
-var unlockCodeInput = document.getElementById("unlockCode");
 
-unlockButton.addEventListener("click", function() {
-  var enteredCode = unlockCodeInput.value;
+    var unlockButton = document.getElementById("unlockButton");
+    var unlockCodeInput = document.getElementById("unlockCode");
 
-  // Vérifier si le code entré correspond au code de déblocage
-  if (enteredCode === "votre_code_de_deblocage") {
-    // Supprimer le blocage en effaçant l'information de blocage du sessionStorage
-    sessionStorage.removeItem("blocage");
-    alert("Jeu débloqué !");
-    window.location.reload(); // Actualiser la page
-  } else {
-    alert("Code de déblocage incorrect.");
-  }
-});
+    unlockButton.addEventListener("click", function() {
+      var enteredCode = unlockCodeInput.value;
 
+      // Vérifier si le code entré correspond au code de déblocage
+      if (enteredCode === "GregivLeBest") {
+        // Supprimer le blocage en effaçant l'information de blocage du sessionStorage
+        sessionStorage.removeItem("blocage");
+        alert("Jeu débloqué !");
+        window.location.reload(); // Actualiser la page
+      } else {
+        alert("Code de déblocage incorrect.");
+      }
+    });
   </script>
 </body>
 </html>
