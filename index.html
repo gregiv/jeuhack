@@ -1,0 +1,187 @@
+<html>
+<head>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: monospace;
+    }
+
+    #container {
+      width: 600px;
+      margin: auto;
+    }
+
+    #title {
+      text-align: center;
+      font-size: 36px;
+    }
+
+    #output {
+      height: 300px;
+      overflow-y: scroll;
+      border: 2px solid white;
+      padding: 10px;
+    }
+
+    #input {
+      width: 580px;
+      height: 30px;
+      border: 2px solid white;
+      padding: 10px;
+    }
+
+    #button {
+      width: 600px;
+      height: 40px;
+      background-color: white;
+      color: black;
+      font-size: 20px;
+    }
+
+    .word {
+      width: 100px;
+      height: 30px;
+      background-color: black;
+      color: white;
+      font-family: monospace;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+<div id="container">
+  <div id="title">Ordinateur</div>
+  <div id="output"></div>
+  <div id="words"></div>
+  <div id="successMessage" style="display: none;">Ordinateur dévérouillé.</div>
+  <input type="text" id="unlockCode" placeholder="Code de déblocage">
+<button id="unlockButton">Débloquer</button>
+</div>
+   <script>
+    // Le mot de passe à deviner
+    var motDePasse = "bien";
+
+    // Le niveau de difficulté du terminal
+    var difficulte = "novice";
+
+    // Le nombre de tentatives restantes
+    var tentatives = 4;
+
+    // La liste des mots possibles
+    var mots = ["bien", "bloc", "bois", "bord", "boue", "bout", "bras", "brin", "bris", "brut", "buis", "bulb", "bung", "buse", "cage", "cane", "cape", "cave", "cede", "cepe", "cime", "clan", "clef", "clou", "club", "coax", "coir", "coin", "coke", "cole", "cone", "cope", "cora", "cote", "crin", "cube"];
+
+    var sortie = document.getElementById("output");
+    var motsElement = document.getElementById("words");
+    var successMessage = document.getElementById("successMessage");
+    var bloque = false;
+
+    function afficher(message) {
+      sortie.innerHTML += message + "<br>";
+      sortie.scrollTop = sortie.scrollHeight;
+    }
+
+    function afficherSucces() {
+      var successMessage = document.getElementById("successMessage");
+      successMessage.style.display = "block";
+
+      setTimeout(function() {
+        // Simulation de chargement
+        successMessage.innerHTML = "Chargement en cours...";
+        setTimeout(function() {
+          // Redirection vers un autre site après le chargement simulé
+          window.location.href = "https://docs.google.com/document/d/1epcYDdNpqUPRNwa8UjVG3nNRFZDIUj-RmFjA0loqEwI/edit#heading=h.8ra73fnz57w8"; // Remplacez par l'URL de redirection souhaitée
+        }, 10000); // Temps de chargement simulé en millisecondes (2 secondes ici)
+      }, 3000); // Temps d'affichage du message de succès en millisecondes (1 seconde ici)
+    }
+
+    // Lorsque l'utilisateur n'a plus de tentatives, appeler cette fonction pour bloquer l'utilisateur
+    function bloquerUtilisateur() {
+      // Sauvegarder l'information de blocage dans le localStorage
+      localStorage.setItem("blocage", "true");
+    }
+
+    // Vérifier si l'utilisateur est bloqué
+    function estBloque() {
+      // Vérifier si l'information de blocage existe dans le localStorage
+      return localStorage.getItem("blocage") === "true";
+    }
+
+    // Fonction pour vérifier la proposition de l'utilisateur
+     function proposer(mot) {
+      // Vérifier si l'utilisateur a des tentatives restantes
+      if (tentatives > 0) {
+        // Vérifier si le mot cliqué correspond au mot de passe
+        if (mot == motDePasse) {
+          // L'utilisateur gagne
+          afficher("Ordinateur dévérouillé.");
+          // Désactiver tous les boutons
+          var boutons = document.getElementsByClassName("word");
+          for (var bouton of boutons) {
+            bouton.disabled = true;
+          }
+          // Afficher le succès
+          afficherSucces();
+        } else {
+          // Le mot cliqué ne correspond pas au mot de passe
+          afficher("Erreur");
+          // Diminuer le nombre de tentatives
+          tentatives--;
+          afficher("Il vous reste " + tentatives + " tentatives.");
+          // Calculer la ressemblance entre le mot cliqué et le mot de passe
+          var ressemblance = 0;
+          for (var i = 0; i < motDePasse.length; i++) {
+            if (mot[i] == motDePasse[i]) {
+              ressemblance++;
+            }
+          }
+          afficher("Ressemblance : " + ressemblance + "/" + motDePasse.length);
+        }
+      } else {
+        // L'utilisateur n'a plus de tentatives
+        afficher("Ordinateur bloqué, appel d'un administrateur");
+        // Désactiver tous les boutons
+        var boutons = document.getElementsByClassName("word");
+        for (var bouton of boutons) {
+          bouton.disabled = true;
+        }
+      }
+    }
+
+    afficher("Tentative de piratage");
+    afficher("Trouvez le bon mot de passe.");
+    afficher("Vous avez " + tentatives + " tentatives.");
+    afficher("Le mot de passe a " + motDePasse.length + " lettres.");
+    afficher("Cliquez sur l'un des mots suivants :");
+
+    for (var mot of mots) {
+      var bouton = document.createElement("button");
+      bouton.className = "word";
+      bouton.innerHTML = mot;
+      bouton.onclick = function() {
+	  
+	   proposer(this.innerHTML);
+      };
+      motsElement.appendChild(bouton);
+    }
+	
+	var unlockButton = document.getElementById("unlockButton");
+var unlockCodeInput = document.getElementById("unlockCode");
+
+unlockButton.addEventListener("click", function() {
+  var enteredCode = unlockCodeInput.value;
+
+  // Vérifier si le code entré correspond au code de déblocage
+  if (enteredCode === "votre_code_de_deblocage") {
+    // Supprimer le blocage en effaçant l'information de blocage du sessionStorage
+    sessionStorage.removeItem("blocage");
+    alert("Jeu débloqué !");
+    window.location.reload(); // Actualiser la page
+  } else {
+    alert("Code de déblocage incorrect.");
+  }
+});
+
+  </script>
+</body>
+</html>
